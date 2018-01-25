@@ -15,6 +15,7 @@ import javafx.scene.layout.BorderPane;
 public class Main extends Application {
 	
 	public static Map testMap;
+	public static Scene scene;
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -23,7 +24,7 @@ public class Main extends Application {
             loader.setLocation(Main.class.getResource("/view/MainView.fxml"));
             root = (BorderPane) loader.load();
             MainViewController controller = loader.getController();
-			Scene scene = new Scene(root,1000,550);
+			scene = new Scene(root,1000,550);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			testMap = new Map(2,2,"testMap");
 			testMap.addTile(0,0,new Tile("file:sprites/RedTile.png", "RedTile"));
