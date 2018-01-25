@@ -21,7 +21,7 @@ public class Map extends AnchorPane implements Serializable{
 	private int mapHeight;
 	private String mapName;
 	private Tile tileArray[][];
-	public static double scale = 20;
+	public static double scale = 4;
 	
 	public Map(int mapWidth, int mapHeight, String mapName) {
 		this.mapWidth = mapWidth;
@@ -84,9 +84,9 @@ public class Map extends AnchorPane implements Serializable{
 	}
 	
 	public void setGraphics() {
+		getChildren().clear();
 		for (int i = 0; i < mapHeight; i++) {
 			for (int j = 0; j< mapWidth; j++) {
-				System.out.println(i + " " + j);
 				TileSprite tileSprite = tileArray[i][j].getTileSprite();
 				AnchorPane.setTopAnchor(tileSprite, i * scale * Tile.TILE_SIZE);
 				AnchorPane.setLeftAnchor(tileSprite, j * scale * Tile.TILE_SIZE);

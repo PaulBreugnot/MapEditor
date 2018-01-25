@@ -76,6 +76,18 @@ public class MainViewController {
 				Main.scene.setCursor(Cursor.DEFAULT);
 			}
 		});
+		map.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent me) {
+				int x = (int) Math.floor(me.getX() / Map.scale / Tile.TILE_SIZE);
+				int y = (int) Math.floor(me.getY() / Map.scale / Tile.TILE_SIZE);
+				Tile tileToAdd = TilesListView.getSelectionModel().getSelectedItem().copy();
+				tileToAdd.getTileSprite().setFitWidth(Map.scale * Tile.TILE_SIZE);
+				tileToAdd.getTileSprite().setFitHeight(Map.scale * Tile.TILE_SIZE);
+				map.addTile(x, y, tileToAdd);
+				map.setGraphics();
+			}
+		});
 		((ScrollPane) MainBorderPane.getCenter()).setContent(map);
 	}
 

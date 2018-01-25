@@ -12,6 +12,15 @@ public class Tile {
 		this.tileType = tileType;
 	}
 	
+	public Tile(TileSprite tileSprite, String tileType) {
+		this.tileSprite = tileSprite;
+		this.tileType = tileType;
+	}
+	
+	public Tile copy() {
+		return new Tile(tileSprite.copy(), tileType);
+	}
+	
 	public TileSprite getTileSprite() {
 		return tileSprite;
 	}

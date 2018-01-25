@@ -17,4 +17,8 @@ public class TileSprite extends Sprite{
 		setFitHeight(Tile.TILE_SIZE * Map.scale);
 		setFitWidth(Tile.TILE_SIZE * Map.scale);
 	}
+	
+	public TileSprite copy(){
+		return new TileSprite(getImage());
+	}
 }
