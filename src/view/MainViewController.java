@@ -29,6 +29,7 @@ import model.sprite.ItemSprite;
 import model.tile.Tile;
 
 public class MainViewController {
+	private boolean unsaved;
 
 	@FXML
 	private BorderPane MainBorderPane;
@@ -152,5 +153,11 @@ public class MainViewController {
 				setText(item.getMapName());
 			}
 		}
+	}
+	
+	@FXML
+	private void handleSaveMap() {
+		MapListView.getSelectionModel().getSelectedItem().save();
+		unsaved = false;
 	}
 }
