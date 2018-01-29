@@ -12,6 +12,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
@@ -43,8 +44,8 @@ public class MainViewController {
 	ArrayList<Tile> TileSpritesArrayList = new ArrayList<>();
 	ObservableList<Tile> TileSpritesList = FXCollections.observableArrayList(TileSpritesArrayList);
 
-	ArrayList<Map> MapsTileSpritesArrayList = new ArrayList<>();
-	ObservableList<Map> MapsList = FXCollections.observableArrayList(MapsTileSpritesArrayList);
+	ArrayList<Map> MapsArrayList = new ArrayList<>();
+	ObservableList<Map> MapsList = FXCollections.observableArrayList(MapsArrayList);
 
 	@FXML
 	private void initialize() {
@@ -155,9 +156,34 @@ public class MainViewController {
 		}
 	}
 	
+	public void setUnsaved(boolean unsaved) {
+		this.unsaved = unsaved;
+	}
+	
 	@FXML
 	private void handleSaveMap() {
 		MapListView.getSelectionModel().getSelectedItem().save();
 		unsaved = false;
+	}
+	
+	@FXML
+	private void handleAddMap() {
+        try {
+    		AnchorPane root;
+    		FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource("/view/NewMapView.fxml"));
+			root = (AnchorPane) loader.load();
+			NewMapController newMapController = loader.getController();
+			newMapController.setMainViewController(this);
+	        Scene scene = new Scene(root);
+	        Stage newMapStage = new Stage();
+	        newMapController.setStage(newMapStage);
+	        newMapStage.setResizable(false);
+	        newMapStage.setTitle("New Map");
+	        newMapStage.setScene(scene);
+	        newMapStage.showAndWait();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
