@@ -32,7 +32,7 @@ public class Main extends Application {
 			testMap.addTile(1,0,new Tile("file:sprites/GreenTile.png", "GreenTile"));
 			testMap.addTile(1,1,new Tile("file:sprites/RedTile.png", "RedTile"));
 			testMap.save();
-			testMap.setGraphics();
+			//testMap.setGraphics(Map.scale * Tile.TILE_SIZE);
 			controller.setMap(testMap);
 			//Tile exampleTile = new Tile("file:sprites/RedTile.png", "RedTile");
 			//root.getChildren().add(exampleTile.getTileSprite());

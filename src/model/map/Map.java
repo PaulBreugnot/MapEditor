@@ -10,6 +10,7 @@ import java.io.Serializable;
 import application.Main;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import model.sprite.TileSprite;
@@ -17,6 +18,10 @@ import model.tile.Tile;
 
 public class Map extends AnchorPane implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7554534579885271464L;
 	private int mapWidth;
 	private int mapHeight;
 	private String mapName;
@@ -30,8 +35,26 @@ public class Map extends AnchorPane implements Serializable{
 		tileArray = new Tile[mapHeight][mapWidth];
 		//setMinWidth(scale * mapWidth * Tile.TILE_SIZE);
 		//setMinHeight(scale * mapHeight * Tile.TILE_SIZE);
-		setPrefWidth(scale * mapWidth * Tile.TILE_SIZE);
-		setPrefHeight(scale * mapHeight * Tile.TILE_SIZE);
+	}
+	
+	public Map(String mapName) {
+		this.mapName = mapName;
+	}
+	
+	public String getMapName() {
+		return mapName;
+	}
+	
+	public int getMapWidth() {
+		return mapWidth;
+	}
+	
+	public int getMapHeight() {
+		return mapHeight;
+	}
+	
+	public Tile[][] getTiles(){
+		return tileArray;
 	}
 	
 	public void addTile(int x, int y, Tile tile) {
@@ -40,14 +63,16 @@ public class Map extends AnchorPane implements Serializable{
 		}
 	}
 	
-	public static Map load(String mapName) {
+	public Map load() {
 	    ObjectInputStream ois = null;
 	    Map map = null;
 	    try {
 	      final FileInputStream fichier = new FileInputStream("maps/" + mapName + ".map");
+	      System.out.println("maps/" + mapName + ".map");
 	      ois = new ObjectInputStream(fichier);
 	      map = (Map) ois.readObject();
 	    } catch (final java.io.IOException e) {
+	    	System.out.println("error");
 	      e.printStackTrace();
 	    } catch (final ClassNotFoundException e) {
 	      e.printStackTrace();
@@ -68,7 +93,7 @@ public class Map extends AnchorPane implements Serializable{
 		try {
 		  final FileOutputStream file = new FileOutputStream("maps/" + mapName + ".map");
 		  oos = new ObjectOutputStream(file);
-		  // ...
+		  oos.writeObject(this);
 		} catch (final java.io.IOException e) {
 		  e.printStackTrace();
 		} finally {
@@ -83,15 +108,18 @@ public class Map extends AnchorPane implements Serializable{
 		}
 	}
 	
-	public void setGraphics() {
+	public void setGraphics(double diplayTileSize) {
 		getChildren().clear();
 		for (int i = 0; i < mapHeight; i++) {
 			for (int j = 0; j< mapWidth; j++) {
 				TileSprite tileSprite = tileArray[i][j].getTileSprite();
-				AnchorPane.setTopAnchor(tileSprite, i * scale * Tile.TILE_SIZE);
-				AnchorPane.setLeftAnchor(tileSprite, j * scale * Tile.TILE_SIZE);
-				getChildren().add(tileSprite);
+				ImageView tileImage = tileSprite.imageView(diplayTileSize);
+				AnchorPane.setTopAnchor(tileImage, i * diplayTileSize);
+				AnchorPane.setLeftAnchor(tileImage, j * diplayTileSize);
+				getChildren().add(tileImage);
 			}
 		}
+		setPrefWidth(mapWidth * diplayTileSize);
+		setPrefHeight(mapHeight * diplayTileSize);
 	}
 }

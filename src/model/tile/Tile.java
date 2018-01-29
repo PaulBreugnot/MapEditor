@@ -1,8 +1,14 @@
 package model.tile;
 
+import java.io.Serializable;
+
 import model.sprite.TileSprite;
 
-public class Tile {
+public class Tile implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -652661369913332480L;
 	public static final int TILE_SIZE = 24;
 	protected TileSprite tileSprite;
 	protected String tileType;
@@ -28,4 +34,11 @@ public class Tile {
 	public String getTileType() {
 		return tileType;
 	}
+
+	@Override
+	public String toString() {
+		return "Tile [tileType=" + tileType + "]";
+	}
+	
+	
 }
