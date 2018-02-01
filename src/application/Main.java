@@ -26,14 +26,14 @@ public class Main extends Application {
             MainViewController controller = loader.getController();
 			scene = new Scene(root,1000,550);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			testMap = new Map(2,2,"testMap");
+			/*testMap = new Map(2,2,"testMap");
 			testMap.addTile(0,0,new Tile("file:sprites/RedTile.png", "RedTile"));
 			testMap.addTile(0,1,new Tile("file:sprites/BlueTile.png", "BlueTile"));
 			testMap.addTile(1,0,new Tile("file:sprites/GreenTile.png", "GreenTile"));
 			testMap.addTile(1,1,new Tile("file:sprites/RedTile.png", "RedTile"));
-			testMap.save();
+			testMap.save();*/
 			//testMap.setGraphics(Map.scale * Tile.TILE_SIZE);
-			controller.setMap(testMap);
+			//controller.setMap(testMap);
 			//Tile exampleTile = new Tile("file:sprites/RedTile.png", "RedTile");
 			//root.getChildren().add(exampleTile.getTileSprite());
 			primaryStage.setScene(scene);

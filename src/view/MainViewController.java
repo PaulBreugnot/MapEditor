@@ -6,6 +6,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import application.Main;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -16,6 +17,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -25,6 +27,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import model.map.Map;
 import model.sprite.ItemSprite;
@@ -35,6 +38,7 @@ public class MainViewController {
 
 	private boolean unsaved;
 	private boolean displayGrid;
+	private StackPane contentStackPane;
 
 	@FXML
 	private BorderPane MainBorderPane;
@@ -44,6 +48,8 @@ public class MainViewController {
 	private ListView<ItemSprite> ItemsListView;
 	@FXML
 	private ListView<Map> MapListView;
+	@FXML
+	private Slider zoomSlider;
 
 	ArrayList<Tile> TileSpritesArrayList = new ArrayList<>();
 	ObservableList<Tile> TileSpritesList = FXCollections.observableArrayList(TileSpritesArrayList);
@@ -94,7 +100,7 @@ public class MainViewController {
 				if (oldValue != null) {
 					oldValue.save();
 				}
-				newValue.setGraphics(Map.scale * Tile.TILE_SIZE);
+				newValue.setGraphics(zoomSlider.getValue() * Tile.TILE_SIZE);
 				setMap(newValue);
 			}
 		});
@@ -119,21 +125,30 @@ public class MainViewController {
 		map.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent me) {
-				int x = (int) Math.floor(me.getX() / Map.scale / Tile.TILE_SIZE);
-				int y = (int) Math.floor(me.getY() / Map.scale / Tile.TILE_SIZE);
+				int x = (int) Math.floor(me.getX() / zoomSlider.getValue() / Tile.TILE_SIZE);
+				int y = (int) Math.floor(me.getY() / zoomSlider.getValue() / Tile.TILE_SIZE);
 				Tile tileToAdd = TilesListView.getSelectionModel().getSelectedItem().copy();
 				map.addTile(x, y, tileToAdd);
-				map.setGraphics(Map.scale * Tile.TILE_SIZE);
+				map.setGraphics(zoomSlider.getValue() * Tile.TILE_SIZE);
 			}
 		});
+
+		zoomSlider.valueProperty().addListener(new ChangeListener<Number>() {
+			public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
+				for (Node child : contentStackPane.getChildren()) {
+					((Map) child).setGraphics(new_val.doubleValue() * Tile.TILE_SIZE);
+				}
+			}
+		});
+
 		/*
 		 * Stage testStage = new Stage(); AnchorPane testPane = new AnchorPane();
 		 * testPane.getChildren().add(map.getTiles()[0][0].getTileSprite().imageView(24)
 		 * ); Scene testScene = new Scene(testPane); testStage.setScene(testScene);
 		 * testStage.show();
 		 */
-		StackPane contentStackPane = new StackPane();
-		setGrid(contentStackPane, map);
+		contentStackPane = new StackPane();
+		setGrid(map);
 		contentStackPane.getChildren().add(map);
 		((ScrollPane) MainBorderPane.getCenter()).setContent(contentStackPane);
 	}
@@ -163,7 +178,7 @@ public class MainViewController {
 		this.unsaved = unsaved;
 	}
 
-	private void setGrid(StackPane contentStackPane, Map map) {
+	private void setGrid(Map map) {
 		Map grid = new Map(map.getMapWidth(), map.getMapHeight(), "grid");
 		for (int i = 0; i < map.getMapHeight(); i++) {
 			for (int j = 0; j < map.getMapWidth(); j++) {
@@ -175,7 +190,7 @@ public class MainViewController {
 				}
 			}
 		}
-		grid.setGraphics(Map.scale * Tile.TILE_SIZE);
+		grid.setGraphics(zoomSlider.getValue() * Tile.TILE_SIZE);
 		contentStackPane.getChildren().add(grid);
 	}
 

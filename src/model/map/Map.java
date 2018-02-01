@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 import application.Main;
+import javafx.beans.property.DoubleProperty;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.image.ImageView;
@@ -26,7 +27,8 @@ public class Map extends AnchorPane implements Serializable {
 	private int mapHeight;
 	private String mapName;
 	private Tile tileArray[][];
-	public static double scale = 4;
+	//public static DoubleProperty scaleProperty;
+	//public static double scale = 4;
 
 	public Map(int mapWidth, int mapHeight, String mapName) {
 		this.mapWidth = mapWidth;
