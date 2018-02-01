@@ -20,6 +20,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.scene.Cursor;
@@ -27,10 +28,13 @@ import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import model.map.Map;
 import model.sprite.ItemSprite;
+import model.sprite.TileSprite;
 import model.tile.Tile;
 
 public class MainViewController {
+
 	private boolean unsaved;
+	private boolean displayGrid;
 
 	@FXML
 	private BorderPane MainBorderPane;
@@ -52,7 +56,7 @@ public class MainViewController {
 		// TileSpritesList.add(new Tile("file:sprites/RedTile.png", "RedTile"));
 		// TileSpritesList.add(new Tile("file:sprites/BlueTile.png", "BlueTile"));
 		// TileSpritesList.add(new Tile("file:sprites/GreenTile.png", "GreenTile"));
-		
+
 		try {
 			Files.list(Paths.get("sprites")).forEach(path -> {
 				String fileName = path.getFileName().toString();
@@ -92,10 +96,6 @@ public class MainViewController {
 				}
 				newValue.setGraphics(Map.scale * Tile.TILE_SIZE);
 				setMap(newValue);
-				System.out.println(newValue.getChildren());
-				System.out.println(newValue.getHeight());
-				System.out.println(newValue.getWidth());
-				//System.out.println(newValue.getTiles()[1][1].getTileSprite().getFitWidth());
 			}
 		});
 	}
@@ -105,8 +105,8 @@ public class MainViewController {
 			@Override
 			public void handle(MouseEvent me) {
 				if (TilesListView.getSelectionModel().getSelectedItem() != null) {
-					Main.scene.setCursor(new ImageCursor(
-							TilesListView.getSelectionModel().getSelectedItem().getTileSprite().imageView(24).getImage()));
+					Main.scene.setCursor(new ImageCursor(TilesListView.getSelectionModel().getSelectedItem()
+							.getTileSprite().imageView(24).getImage()));
 				}
 			}
 		});
@@ -126,13 +126,16 @@ public class MainViewController {
 				map.setGraphics(Map.scale * Tile.TILE_SIZE);
 			}
 		});
-		/*Stage testStage = new Stage();
-		AnchorPane testPane = new AnchorPane();
-		testPane.getChildren().add(map.getTiles()[0][0].getTileSprite().imageView(24));
-		Scene testScene = new Scene(testPane);
-		testStage.setScene(testScene);
-		testStage.show();*/
-		((ScrollPane) MainBorderPane.getCenter()).setContent(map);
+		/*
+		 * Stage testStage = new Stage(); AnchorPane testPane = new AnchorPane();
+		 * testPane.getChildren().add(map.getTiles()[0][0].getTileSprite().imageView(24)
+		 * ); Scene testScene = new Scene(testPane); testStage.setScene(testScene);
+		 * testStage.show();
+		 */
+		StackPane contentStackPane = new StackPane();
+		setGrid(contentStackPane, map);
+		contentStackPane.getChildren().add(map);
+		((ScrollPane) MainBorderPane.getCenter()).setContent(contentStackPane);
 	}
 
 	static class TileSpriteCell extends ListCell<Tile> {
@@ -155,33 +158,49 @@ public class MainViewController {
 			}
 		}
 	}
-	
+
 	public void setUnsaved(boolean unsaved) {
 		this.unsaved = unsaved;
 	}
-	
+
+	private void setGrid(StackPane contentStackPane, Map map) {
+		Map grid = new Map(map.getMapWidth(), map.getMapHeight(), "grid");
+		for (int i = 0; i < map.getMapHeight(); i++) {
+			for (int j = 0; j < map.getMapWidth(); j++) {
+				System.out.println((i + j) % 2);
+				if ((i + j) % 2 == 0) {
+					grid.addTile(i, j, new Tile(TileSprite.PairUnusedTile, "Unused"));
+				} else {
+					grid.addTile(i, j, new Tile(TileSprite.UnpairUnusedTile, "Unused"));
+				}
+			}
+		}
+		grid.setGraphics(Map.scale * Tile.TILE_SIZE);
+		contentStackPane.getChildren().add(grid);
+	}
+
 	@FXML
 	private void handleSaveMap() {
 		MapListView.getSelectionModel().getSelectedItem().save();
 		unsaved = false;
 	}
-	
+
 	@FXML
 	private void handleAddMap() {
-        try {
-    		AnchorPane root;
-    		FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("/view/NewMapView.fxml"));
+		try {
+			AnchorPane root;
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(Main.class.getResource("/view/NewMapView.fxml"));
 			root = (AnchorPane) loader.load();
 			NewMapController newMapController = loader.getController();
 			newMapController.setMainViewController(this);
-	        Scene scene = new Scene(root);
-	        Stage newMapStage = new Stage();
-	        newMapController.setStage(newMapStage);
-	        newMapStage.setResizable(false);
-	        newMapStage.setTitle("New Map");
-	        newMapStage.setScene(scene);
-	        newMapStage.showAndWait();
+			Scene scene = new Scene(root);
+			Stage newMapStage = new Stage();
+			newMapController.setStage(newMapStage);
+			newMapStage.setResizable(false);
+			newMapStage.setTitle("New Map");
+			newMapStage.setScene(scene);
+			newMapStage.showAndWait();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

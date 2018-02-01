@@ -9,8 +9,8 @@ import model.tile.Tile;
 
 public class TileSprite extends Sprite implements Serializable{
 
-	public static final TileSprite PairUnusedTile = new TileSprite("sprites/PairUnusedTile.png");
-	public static final TileSprite UnpairUnusedTile = new TileSprite("sprites/UnpairUnusedTile.png");
+	public static final TileSprite PairUnusedTile = new TileSprite("file:sprites/PairUnusedTile.png");
+	public static final TileSprite UnpairUnusedTile = new TileSprite("file:sprites/UnpairUnusedTile.png");
 	/**
 	 * 
 	 */

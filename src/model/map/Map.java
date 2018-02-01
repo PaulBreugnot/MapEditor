@@ -33,7 +33,6 @@ public class Map extends AnchorPane implements Serializable {
 		this.mapHeight = mapHeight;
 		this.mapName = mapName;
 		tileArray = new Tile[mapHeight][mapWidth];
-		initGrid();
 		// setMinWidth(scale * mapWidth * Tile.TILE_SIZE);
 		// setMinHeight(scale * mapHeight * Tile.TILE_SIZE);
 	}
@@ -107,20 +106,6 @@ public class Map extends AnchorPane implements Serializable {
 				ex.printStackTrace();
 			}
 		}
-	}
-
-	public void initGrid() {
-		for (int i = 0; i < mapHeight; i++) {
-			for (int j = 0; j < mapWidth; j++) {
-				if((i+j)%2 == 0) {
-					tileArray[i][j] = new Tile(TileSprite.PairUnusedTile, "Unused");
-				}
-				else {
-					tileArray[i][j] = new Tile(TileSprite.PairUnusedTile, "Unused");
-				}
-			}
-		}
-
 	}
 
 	public void setGraphics(double diplayTileSize) {
