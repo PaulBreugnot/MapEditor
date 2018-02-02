@@ -22,6 +22,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -33,6 +34,8 @@ import model.map.Map;
 import model.sprite.ItemSprite;
 import model.sprite.TileSprite;
 import model.tile.Tile;
+import view.toolBars.ColumnToolBarController;
+import view.toolBars.RowToolBarController;
 
 public class MainViewController {
 
@@ -42,6 +45,8 @@ public class MainViewController {
 
 	@FXML
 	private BorderPane MainBorderPane;
+	@FXML
+	private BorderPane MapBorderPane;
 	@FXML
 	private ListView<Tile> TilesListView;
 	@FXML
@@ -59,6 +64,12 @@ public class MainViewController {
 
 	@FXML
 	private void initialize() {
+		setListViews();
+		//setToolBars();
+
+	}
+
+	public void setListViews() {
 		// TileSpritesList.add(new Tile("file:sprites/RedTile.png", "RedTile"));
 		// TileSpritesList.add(new Tile("file:sprites/BlueTile.png", "BlueTile"));
 		// TileSpritesList.add(new Tile("file:sprites/GreenTile.png", "GreenTile"));
@@ -106,6 +117,31 @@ public class MainViewController {
 		});
 	}
 
+	public void setToolBars() {
+		try {
+			AnchorPane columnToolBar;
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(Main.class.getResource("/view/toolBars/ColumnToolBar.fxml"));
+			columnToolBar = (AnchorPane) loader.load();
+			ColumnToolBarController controller = loader.getController();
+			controller.setMainViewController(this);
+			MapBorderPane.setTop(columnToolBar);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			AnchorPane rowToolBar;
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(Main.class.getResource("/view/toolBars/RowToolBar.fxml"));
+			rowToolBar = (AnchorPane) loader.load();
+			RowToolBarController controller = loader.getController();
+			controller.setMainViewController(this);
+			MapBorderPane.setLeft(rowToolBar);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public void setMap(Map map) {
 		map.setOnMouseEntered(new EventHandler<MouseEvent>() {
 			@Override
@@ -150,7 +186,7 @@ public class MainViewController {
 		contentStackPane = new StackPane();
 		setGrid(map);
 		contentStackPane.getChildren().add(map);
-		((ScrollPane) MainBorderPane.getCenter()).setContent(contentStackPane);
+		((ScrollPane) MapBorderPane.getCenter()).setContent(contentStackPane);
 	}
 
 	static class TileSpriteCell extends ListCell<Tile> {

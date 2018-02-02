@@ -24,6 +24,7 @@ public class Main extends Application {
             loader.setLocation(Main.class.getResource("/view/MainView.fxml"));
             root = (BorderPane) loader.load();
             MainViewController controller = loader.getController();
+            controller.setToolBars();
 			scene = new Scene(root,1000,550);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			/*testMap = new Map(2,2,"testMap");
@@ -37,6 +38,8 @@ public class Main extends Application {
 			//Tile exampleTile = new Tile("file:sprites/RedTile.png", "RedTile");
 			//root.getChildren().add(exampleTile.getTileSprite());
 			primaryStage.setScene(scene);
+			primaryStage.setMinHeight(600);
+			primaryStage.setMinWidth(1050);
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();
