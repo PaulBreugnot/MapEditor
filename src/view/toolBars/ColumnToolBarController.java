@@ -2,7 +2,7 @@ package view.toolBars;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import view.MainViewController;
+import view.mainView.MainViewController;
 
 public class ColumnToolBarController {
 

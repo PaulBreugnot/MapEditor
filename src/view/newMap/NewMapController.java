@@ -1,9 +1,10 @@
-package view;
+package view.newMap;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.map.Map;
+import view.mainView.MainViewController;
 
 public class NewMapController {
 

@@ -58,6 +58,10 @@ public class Map extends AnchorPane implements Serializable {
 	public Tile[][] getTiles() {
 		return tileArray;
 	}
+	
+	public Tile getTile(int x, int y) {
+		return tileArray[y][x];
+	}
 
 	public void addTile(int x, int y, Tile tile) {
 		if (x < mapWidth && y < mapHeight) {
@@ -110,20 +114,20 @@ public class Map extends AnchorPane implements Serializable {
 		}
 	}
 
-	public void setGraphics(double diplayTileSize) {
+	public void setGraphics(double displayTileSize) {
 		getChildren().clear();
 		for (int i = 0; i < mapHeight; i++) {
 			for (int j = 0; j < mapWidth; j++) {
 				if (tileArray[i][j] != null) {
 					TileSprite tileSprite = tileArray[i][j].getTileSprite();
-					ImageView tileImage = tileSprite.imageView(diplayTileSize);
-					AnchorPane.setTopAnchor(tileImage, i * diplayTileSize);
-					AnchorPane.setLeftAnchor(tileImage, j * diplayTileSize);
+					ImageView tileImage = tileSprite.imageView(displayTileSize);
+					AnchorPane.setTopAnchor(tileImage, i * displayTileSize);
+					AnchorPane.setLeftAnchor(tileImage, j * displayTileSize);
 					getChildren().add(tileImage);
 				}
 			}
 		}
-		setPrefWidth(mapWidth * diplayTileSize);
-		setPrefHeight(mapHeight * diplayTileSize);
+		setPrefWidth(mapWidth * displayTileSize);
+		setPrefHeight(mapHeight * displayTileSize);
 	}
 }

@@ -3,6 +3,8 @@ package model.tile;
 import java.io.Serializable;
 
 import model.sprite.TileSprite;
+import model.tile.warp.DestinationOf;
+import model.tile.warp.GoTo;
 
 public class Tile implements Serializable{
 	/**
@@ -12,6 +14,13 @@ public class Tile implements Serializable{
 	public static final int TILE_SIZE = 24;
 	protected TileSprite tileSprite;
 	protected String tileType;
+	
+	protected DestinationOf destinationOf;
+	protected GoTo goTo;
+	
+	public Tile() {
+		this("", null);
+	}
 	
 	public Tile (String url, String tileType) {
 		this.tileSprite = new TileSprite(url);
@@ -33,6 +42,22 @@ public class Tile implements Serializable{
 	
 	public String getTileType() {
 		return tileType;
+	}
+	
+	public DestinationOf getDestinationOf() {
+		return destinationOf;
+	}
+	
+	public boolean isDestinationOfSomewhere() {
+		return destinationOf != null;
+	}
+	
+	public GoTo getGoTo() {
+		return goTo;
+	}
+	
+	public boolean goSomewhere() {
+		return goTo != null;
 	}
 
 	@Override

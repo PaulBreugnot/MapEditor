@@ -1,4 +1,4 @@
-package view;
+package view.mainView;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -34,6 +34,8 @@ import model.map.Map;
 import model.sprite.ItemSprite;
 import model.sprite.TileSprite;
 import model.tile.Tile;
+import view.linkMaps.LinkMapsController;
+import view.newMap.NewMapController;
 import view.toolBars.ColumnToolBarController;
 import view.toolBars.RowToolBarController;
 
@@ -60,12 +62,12 @@ public class MainViewController {
 	ObservableList<Tile> TileSpritesList = FXCollections.observableArrayList(TileSpritesArrayList);
 
 	ArrayList<Map> MapsArrayList = new ArrayList<>();
-	ObservableList<Map> MapsList = FXCollections.observableArrayList(MapsArrayList);
+	public ObservableList<Map> MapsList = FXCollections.observableArrayList(MapsArrayList);
 
 	@FXML
 	private void initialize() {
 		setListViews();
-		//setToolBars();
+		// setToolBars();
 
 	}
 
@@ -148,7 +150,7 @@ public class MainViewController {
 			public void handle(MouseEvent me) {
 				if (TilesListView.getSelectionModel().getSelectedItem() != null) {
 					Main.scene.setCursor(new ImageCursor(TilesListView.getSelectionModel().getSelectedItem()
-							.getTileSprite().imageView(24).getImage()));
+							.getTileSprite().imageView(24).getImage(), 12, 12));
 				}
 			}
 		});
@@ -200,7 +202,7 @@ public class MainViewController {
 		}
 	}
 
-	static class MapCell extends ListCell<Map> {
+	public static class MapCell extends ListCell<Map> {
 		@Override
 		public void updateItem(Map item, boolean empty) {
 			super.updateItem(item, empty);
@@ -241,7 +243,7 @@ public class MainViewController {
 		try {
 			AnchorPane root;
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(Main.class.getResource("/view/NewMapView.fxml"));
+			loader.setLocation(Main.class.getResource("/view/newMap/NewMapView.fxml"));
 			root = (AnchorPane) loader.load();
 			NewMapController newMapController = loader.getController();
 			newMapController.setMainViewController(this);
@@ -252,6 +254,26 @@ public class MainViewController {
 			newMapStage.setTitle("New Map");
 			newMapStage.setScene(scene);
 			newMapStage.showAndWait();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@FXML
+	private void linkMaps() {
+		try {
+			AnchorPane root;
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(Main.class.getResource("/view/linkMaps/LinkMaps.fxml"));
+			root = (AnchorPane) loader.load();
+			LinkMapsController linkMapsController = loader.getController();
+			linkMapsController.setContent();
+			
+			Scene scene = new Scene(root);
+			Stage linkMapsStage = new Stage();
+			linkMapsStage.setTitle("Link Maps");
+			linkMapsStage.setScene(scene);
+			linkMapsStage.showAndWait();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
