@@ -4,11 +4,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import model.map.Map;
-import model.sprite.TileSprite;
-import model.tile.Tile;
 import view.mainView.MainViewController;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 
 
@@ -16,6 +13,7 @@ public class Main extends Application {
 	
 	public static Map testMap;
 	public static Scene scene;
+	
 	@Override
 	public void start(Stage primaryStage) {
 		try {

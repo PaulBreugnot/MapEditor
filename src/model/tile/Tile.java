@@ -36,6 +36,14 @@ public class Tile implements Serializable{
 		return new Tile(tileSprite.copy(), tileType);
 	}
 	
+	public void setGoTo(GoTo goTo) {
+		this.goTo = goTo;
+	}
+	
+	public void setDestinationOf(DestinationOf destinationOf) {
+		this.destinationOf = destinationOf;
+	}
+	
 	public TileSprite getTileSprite() {
 		return tileSprite;
 	}

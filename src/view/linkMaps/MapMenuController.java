@@ -17,12 +17,14 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import model.map.Map;
 import model.tile.Tile;
+import model.tile.warp.DestinationOf;
+import model.tile.warp.GoTo;
 
 public class MapMenuController {
-	
+
 	@FXML
 	private Label MapMenuLabel;
-	
+
 	@FXML
 	private ListView<Map> MapsListView;
 
@@ -31,29 +33,32 @@ public class MapMenuController {
 
 	@FXML
 	private Slider ZoomSlider;
-	
+
 	private StackPane contentStackPane;
 	private AnchorPane StartTilesAnchorPane = new AnchorPane();
 	private AnchorPane DestinationTilesAnchorPane = new AnchorPane();
 	private LinkMapsController linkMapsController;
-	
+	private boolean destination;
+
 	Rectangle potentialStartTileGraphic;
-	
+	Rectangle DestinationTileGraphic;
+
 	@FXML
 	public void initialize() {
-		
+
 	}
-	
+
 	public Slider getZoomSlider() {
 		return ZoomSlider;
 	}
-	
-	public void setContent(LinkMapsController linkMapsController, String MenuLabel) {
+
+	public void setContent(LinkMapsController linkMapsController, String MenuLabel, boolean destination) {
+		this.destination = destination;
 		this.linkMapsController = linkMapsController;
 		MapMenuLabel.setText(MenuLabel);
 		MapsListViewBuilder.setContent(this, MapsListView);
 	}
-	
+
 	public void setMap(Map map) {
 		map.setOnMouseEntered(new EventHandler<MouseEvent>() {
 			@Override
@@ -74,7 +79,7 @@ public class MapMenuController {
 				setWrapTilesGraphics(map);
 			}
 		});
-		
+
 		contentStackPane = new StackPane();
 		contentStackPane.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
@@ -82,36 +87,54 @@ public class MapMenuController {
 				System.out.println("Select Start Tile");
 				int x = (int) Math.floor(me.getX() / ZoomSlider.getValue() / Tile.TILE_SIZE);
 				int y = (int) Math.floor(me.getY() / ZoomSlider.getValue() / Tile.TILE_SIZE);
-				if (map.getTile(x ,y) != null) {
-					StartTilesAnchorPane.getChildren().remove(potentialStartTileGraphic);
+
+				if (map.getTile(x, y) != null) {
 					double displayTileSize = ZoomSlider.getValue() * Tile.TILE_SIZE;
-					potentialStartTileGraphic = new Rectangle(displayTileSize, displayTileSize, Color.BLUE);
-					potentialStartTileGraphic.setOpacity(0.3);
-					AnchorPane.setTopAnchor(potentialStartTileGraphic, y * displayTileSize);
-					AnchorPane.setLeftAnchor(potentialStartTileGraphic, x * displayTileSize);
-					System.out.println("Display rectangle");
-					StartTilesAnchorPane.getChildren().add(potentialStartTileGraphic);
-					
-					linkMapsController.setCurrentlyLinking(true);
+					if (!destination) {
+						StartTilesAnchorPane.getChildren().remove(potentialStartTileGraphic);
+						potentialStartTileGraphic = new Rectangle(displayTileSize, displayTileSize, Color.BLUE);
+						potentialStartTileGraphic.setOpacity(0.3);
+						AnchorPane.setTopAnchor(potentialStartTileGraphic, y * displayTileSize);
+						AnchorPane.setLeftAnchor(potentialStartTileGraphic, x * displayTileSize);
+						System.out.println("Display rectangle");
+						StartTilesAnchorPane.getChildren().add(potentialStartTileGraphic);
+
+						DestinationOf destinationOf = new DestinationOf(getSelectedMap().getMapName(), x, y);
+						linkMapsController.setPotentialDestinationOf(destinationOf);
+						linkMapsController.setCurrentlyLinking(true);
+					} else {
+						DestinationTileGraphic = new Rectangle(displayTileSize, displayTileSize, Color.RED);
+						DestinationTileGraphic.setOpacity(0.3);
+						AnchorPane.setTopAnchor(DestinationTileGraphic, y * displayTileSize);
+						AnchorPane.setLeftAnchor(DestinationTileGraphic, x * displayTileSize);
+						System.out.println("Display rectangle");
+						StartTilesAnchorPane.getChildren().add(DestinationTileGraphic);
+
+						GoTo goTo = new GoTo(getSelectedMap().getMapName(), x, y);
+						linkMapsController.setPotentialGoTo(goTo);
+
+						linkMapsController.link();
+						linkMapsController.setCurrentlyLinking(true);
+					}
 				}
 			}
 		});
-		
+
 		contentStackPane.getChildren().add(map);
-		//startContentStackPane.getChildren().add(StartMapStartTilesAnchorPane);
-		//startContentStackPane.getChildren().add(StartMapEndTilesAnchorPane);
+		// startContentStackPane.getChildren().add(StartMapStartTilesAnchorPane);
+		// startContentStackPane.getChildren().add(StartMapEndTilesAnchorPane);
 		setWrapTilesGraphics(map);
 		ScrollPane.setContent(contentStackPane);
-		//startScrollPane.setContent(map);
+		// startScrollPane.setContent(map);
 	}
-	
+
 	public void setWrapTilesGraphics(Map map) {
 		contentStackPane.getChildren().remove(StartTilesAnchorPane);
 		contentStackPane.getChildren().remove(DestinationTilesAnchorPane);
-		
+
 		StartTilesAnchorPane.getChildren().clear();
 		DestinationTilesAnchorPane.getChildren().clear();
-		
+
 		double displayTileSize = ZoomSlider.getValue() * Tile.TILE_SIZE;
 		StartTilesAnchorPane.setPrefHeight(map.getMapHeight() * displayTileSize);
 		DestinationTilesAnchorPane.setPrefHeight(map.getMapWidth() * displayTileSize);
@@ -138,5 +161,9 @@ public class MapMenuController {
 		}
 		contentStackPane.getChildren().add(StartTilesAnchorPane);
 		contentStackPane.getChildren().add(DestinationTilesAnchorPane);
+	}
+	
+	public Map getSelectedMap() {
+		return MapsListView.getSelectionModel().getSelectedItem();
 	}
 }
